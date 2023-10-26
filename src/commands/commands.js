@@ -2,11 +2,15 @@
  * Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
  * See LICENSE in the project root for license information.
  */
-
+//import { useAppContext } from "../context/AppContext";
 /* global global, Office, self, window */
 
 Office.onReady(() => {
-  // If needed, Office.js is ready to be called
+  //function action(event) {
+  // const { setMessage } = useAppContext();
+  // setMessage("Performed action.");
+  // ... rest of your code
+  // }
 });
 
 /**
@@ -19,6 +23,7 @@ function action(event) {
     message: "Performed action.",
     icon: "Icon.80x80",
     persistent: true,
+    FormData: "hi",
   };
 
   // Show a notification message

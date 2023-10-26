@@ -1,10 +1,8 @@
-import * as React from "react";
-import PropTypes from "prop-types";
-import Header from "./Header";
-import HeroList from "./HeroList";
-import TextInsertion from "./TextInsertion";
+import React, { useEffect, useContext } from "react";
 import { makeStyles } from "@fluentui/react-components";
-import { Ribbon24Regular, LockOpen24Regular, DesignIdeas24Regular } from "@fluentui/react-icons";
+import { Route, Switch } from "react-router-dom";
+import MainHome from "./MainHome";
+import { useAppContext } from "../../context/AppContext";
 
 const useStyles = makeStyles({
   root: {
@@ -12,59 +10,79 @@ const useStyles = makeStyles({
   },
 });
 
-const App = (props) => {
+const App = () => {
   const styles = useStyles();
-  // The list items are static and won't change at runtime,
-  // so this should be an ordinary const, not a part of state.
-  const listItems = [
-    {
-      icon: <Ribbon24Regular />,
-      primaryText: "Achieve more with Office integration",
-    },
-    {
-      icon: <LockOpen24Regular />,
-      primaryText: "Unlock features and functionality",
-    },
-    {
-      icon: <DesignIdeas24Regular />,
-      primaryText: "Create and visualize like a pro",
-    },
-  ];
+  const { message, setMessage } = useAppContext();
+
+  const mydata = {
+    name: "test",
+    phone: "077",
+    age: 20,
+  };
 
   const openDialog = () => {
-      const dialogOptions = {
-        height: 50,
-        width: 40,
-        displayInIframe: true,
-      };
-        // Serialize the mydata object to a query string parameter
-    // const dataQueryString = encodeURIComponent(JSON.stringify(mydata));
-    const dialogUrl = `https://localhost:3000/taskpane.html`;
+    const dialogOptions = {
+      height: 50,
+      width: 40,
+      displayInIframe: true,
+    };
+    //updateData(mydata);
+    const dataQueryString = encodeURIComponent(JSON.stringify(mydata));
+    const dialogUrl = `https://localhost:3000/commands.html?data=${dataQueryString}`;
 
-        Office.context.ui.displayDialogAsync(dialogUrl, dialogOptions, function (asyncResult) {
-          if (asyncResult.status === Office.AsyncResultStatus.Failed) {
-            console.error("Dialog failed to display. Error: " + asyncResult.error.message);
-          } else {
-            const dialog = asyncResult.value;
-            dialog.addEventHandler(Office.EventType.DialogMessageReceived, (arg) => {
-              // Handle messages received from the dialog
-              const message = JSON.parse(arg.message);
-              console.log("Message received from dialog:", message);
-            });
-          }
+    Office.context.ui.displayDialogAsync(dialogUrl, dialogOptions, function (asyncResult) {
+      if (asyncResult.status === Office.AsyncResultStatus.Failed) {
+        console.error("Dialog failed to display. Error: " + asyncResult.error.message);
+      } else {
+        const dialog = asyncResult.value;
+        dialog.addEventHandler(Office.EventType.DialogMessageReceived, (arg) => {
+          const message = JSON.parse(arg.message);
+          console.log("Message received from dialog:", message);
         });
       }
+    });
+  };
 
+  useEffect(() => {
+    const receiveMessage = (event) => {
+      console.log(event.data, "event", event.origin, window.location.origin);
+      // Check if the message is coming from the correct origin (security measure)
+
+      // Assuming the message is a JSON string
+      //const data = JSON.parse(event.data);
+
+      // Now `data` contains the information sent from your HTML file
+      console.log("Received data:", event);
+    };
+
+    // Add an event listener for messages
+    window.addEventListener("message", receiveMessage);
+
+    // Cleanup the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("message", receiveMessage);
+    };
+  }, []);
+
+  window.addEventListener("message", (event) => {
+    // const received = JSON.parse(event.data);
+    console.log(event, "event");
+
+    // Handle the received data in your React application
+    // You can update state or perform actions based on the received data
+  });
+
+  // console.log(message, "message");
 
   return (
     <div className={styles.root}>
-     <button onClick={openDialog}>Open Dialog</button>
+      <Switch>
+        <Route exact path="/">
+          <MainHome openDialog={openDialog} />
+        </Route>
+      </Switch>
     </div>
   );
-};
-
-App.propTypes = {
-  title: PropTypes.string,
 };
 
 export default App;

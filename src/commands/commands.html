@@ -3,17 +3,94 @@
 
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
 
     <!-- Office JavaScript API -->
     <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
-</head>
+    <script>
+      // Function to display "Hello World" in the dataDisplay div
+      function displayHelloWorld() {
+        var dataDisplay = document.getElementById("dataDisplay");
+        if (dataDisplay) {
+          dataDisplay.innerHTML = "Hello Addin";
+        }
+      }
 
-<body>
+      function getDataFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const dataParam = urlParams.get("data");
+        return JSON.parse(decodeURIComponent(dataParam));
+      }
 
-</body>
+      // Function to display the data in the modal
+      function displayData() {
+        const data = getDataFromUrl();
+        const dataDisplay = document.getElementById("dataDisplay");
+        dataDisplay.innerHTML = `Name: ${data.name}, Phone: ${data.phone}`;
 
+        // Create a dynamic label and input for age
+        const ageLabel = document.createElement("label");
+        ageLabel.setAttribute("for", "ageInput");
+        ageLabel.textContent = "Age: ";
+        dataDisplay.appendChild(ageLabel);
+
+        const ageInput = document.createElement("input");
+        ageInput.setAttribute("type", "text");
+        ageInput.setAttribute("id", "ageInput");
+        ageInput.value = data.age;
+        dataDisplay.appendChild(ageInput);
+
+        // Create a button dynamically
+        const sendButton = document.createElement("button");
+        sendButton.innerHTML = "Send Data Back";
+        sendButton.onclick = sendDataBack;
+
+        // Append the button to the dataDisplay div
+        dataDisplay.appendChild(sendButton);
+      }
+
+      function sendDataBack() {
+        const data = getDataFromUrl();
+        const age = document.getElementById("ageInput").value;
+        data.age = age;
+        const message = JSON.stringify(data);
+
+        // Send the message to the parent window (React app)
+        window.parent.postMessage(message, "*");
+      }
+
+      // Display the data when the content is loaded
+
+      console.log("Script is running");
+
+      // Add an event listener to call the function when the document is loaded
+      document.addEventListener("DOMContentLoaded", function (event) {
+        //displayHelloWorld();
+        displayData();
+      });
+    </script>
+
+    <script>
+      function getDataToPass() {
+        const data = {
+          name: "John Doe",
+          email: "john.doe@example.com",
+          age: 30,
+        };
+        return JSON.stringify(data);
+      }
+
+      function sendToParent() {
+        const data = getDataToPass();
+        window.parent.postMessage(data, "*");
+      }
+    </script>
+  </head>
+
+  <body>
+    <button onclick="sendToParent()">Send Data</button>
+    <div id="dataDisplay"></div>
+  </body>
 </html>

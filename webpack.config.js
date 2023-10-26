@@ -95,6 +95,7 @@ module.exports = async (env, options) => {
         template: "./src/commands/commands.html",
         chunks: ["commands"],
       }),
+    
       new webpack.ProvidePlugin({
         Promise: ["es6-promise", "Promise"],
       }),
