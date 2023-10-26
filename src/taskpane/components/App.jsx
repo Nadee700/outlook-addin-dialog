@@ -13,21 +13,14 @@ const useStyles = makeStyles({
 const App = () => {
   const styles = useStyles();
   const { message, setMessage } = useAppContext();
-
-  const mydata = {
-    name: "test",
-    phone: "077",
-    age: 20,
-  };
-
   const openDialog = () => {
     const dialogOptions = {
       height: 50,
       width: 40,
       displayInIframe: true,
     };
-    //updateData(mydata);
-    const dataQueryString = encodeURIComponent(JSON.stringify(mydata));
+
+    const dataQueryString = encodeURIComponent(JSON.stringify(message));
     const dialogUrl = `https://localhost:3000/commands.html?data=${dataQueryString}`;
 
     Office.context.ui.displayDialogAsync(dialogUrl, dialogOptions, function (asyncResult) {
@@ -36,43 +29,13 @@ const App = () => {
       } else {
         const dialog = asyncResult.value;
         dialog.addEventHandler(Office.EventType.DialogMessageReceived, (arg) => {
-          const message = JSON.parse(arg.message);
-          console.log("Message received from dialog:", message);
+          const msg = JSON.parse(arg.message);
+          setMessage(msg);
+          console.log("Message received from dialog:", msg);
         });
       }
     });
   };
-
-  useEffect(() => {
-    const receiveMessage = (event) => {
-      console.log(event.data, "event", event.origin, window.location.origin);
-      // Check if the message is coming from the correct origin (security measure)
-
-      // Assuming the message is a JSON string
-      //const data = JSON.parse(event.data);
-
-      // Now `data` contains the information sent from your HTML file
-      console.log("Received data:", event);
-    };
-
-    // Add an event listener for messages
-    window.addEventListener("message", receiveMessage);
-
-    // Cleanup the event listener when the component unmounts
-    return () => {
-      window.removeEventListener("message", receiveMessage);
-    };
-  }, []);
-
-  window.addEventListener("message", (event) => {
-    // const received = JSON.parse(event.data);
-    console.log(event, "event");
-
-    // Handle the received data in your React application
-    // You can update state or perform actions based on the received data
-  });
-
-  // console.log(message, "message");
 
   return (
     <div className={styles.root}>
