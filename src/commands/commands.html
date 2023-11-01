@@ -3,51 +3,96 @@
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+    <script
+      type="text/javascript"
+      src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"
+    ></script>
+    <link rel="stylesheet" href="../css/custom.css" />
+    <style>
+      .row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+      .textField {
+        width: 45%;
+      }
+      .seeMore {
+        cursor: pointer;
+        color: blue;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
     <script>
-      function getDataFromUrl() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const dataParam = urlParams.get("data");
-        return JSON.parse(decodeURIComponent(dataParam));
-      }
-
-      function displayData() {
-        const data = getDataFromUrl();
-        const dataDisplay = document.getElementById("dataDisplay");
-        dataDisplay.innerHTML = `Name: ${data.name}, Phone: ${data.phone}`;
-
-        const ageLabel = document.createElement("label");
-        ageLabel.setAttribute("for", "ageInput");
-        ageLabel.textContent = "Age: ";
-        dataDisplay.appendChild(ageLabel);
-
-        const ageInput = document.createElement("input");
-        ageInput.setAttribute("type", "text");
-        ageInput.setAttribute("id", "ageInput");
-        ageInput.value = data.age;
-        dataDisplay.appendChild(ageInput);
-
-        const sendButton = document.createElement("button");
-        sendButton.innerHTML = "Send Data Back";
-        sendButton.onclick = sendDataBack;
-        dataDisplay.appendChild(sendButton);
-      }
-
-      function sendDataBack() {
-        const data = getDataFromUrl();
-        const age = document.getElementById("ageInput").value;
-        data.age = age;
-        const message = JSON.stringify(data);
-        Office.context.ui.messageParent(message);
-      }
-
-      document.addEventListener("DOMContentLoaded", function (event) {
-        displayData();
-      });
+      // Your existing JavaScript code
     </script>
   </head>
 
   <body>
-    <div id="dataDisplay"></div>
+    <div>
+      <img
+        src="../../assets/topHeader.png"
+        id="topHeader"
+        style="width: -webkit-fill-available;"
+      />
+      <h1>
+        <center>Business Activity</center>
+      </h1>
+    </div>
+
+    <div id="dataDisplay">
+      <div class="row">
+        <input type="text" class="textField" placeholder="TextField 1" />
+        <input type="text" class="textField" placeholder="TextField 2" />
+      </div>
+      <div class="row">
+        <input type="text" class="textField" placeholder="TextField 3" />
+        <input type="text" class="textField" placeholder="TextField 4" />
+      </div>
+      <div class="row">
+        <input type="text" class="textField" placeholder="TextField 5" />
+        <input type="text" class="textField" placeholder="TextField 6" />
+      </div>
+      <div class="seeMore" onclick="toggleHidden()">See more</div>
+      <div class="hidden">
+        <div class="row">
+          <input type="text" class="textField" placeholder="TextField 7" />
+          <input type="text" class="textField" placeholder="TextField 8" />
+        </div>
+        <div class="row">
+          <input type="text" class="textField" placeholder="TextField 9" />
+          <input type="text" class="textField" placeholder="TextField 10" />
+        </div>
+        <div class="row">
+          <input type="text" class="textField" placeholder="TextField 11" />
+          <input type="text" class="textField" placeholder="TextField 12" />
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <img
+        src="../../assets/footer.png"
+        id="footer"
+        style="bottom: 0; position: absolute; margin-left: -8px; width: -webkit-fill-available;"
+      />
+    </div>
+    <div>
+      <img
+        src="../../assets/addovationSync.png"
+        style="bottom: 0; position: absolute; float: center;"
+      />
+    </div>
+
+    <script>
+      function toggleHidden() {
+        const hiddenDiv = document.querySelector(".hidden");
+        if (hiddenDiv) {
+          hiddenDiv.classList.toggle("hidden");
+        }
+      }
+    </script>
   </body>
 </html>

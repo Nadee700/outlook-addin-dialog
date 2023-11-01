@@ -13,6 +13,8 @@ const useStyles = makeStyles({
 const App = () => {
   const styles = useStyles();
   const { message, setMessage } = useAppContext();
+
+  
   const openDialog = () => {
     const dialogOptions = {
       height: 50,

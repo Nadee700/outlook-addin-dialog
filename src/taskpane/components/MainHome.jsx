@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 //import { DataContext } from "../../context/AppContext";
 import { useAppContext } from "../../context/AppContext";
 const MainHome = ({ openDialog }) => {
+
   const { message } = useAppContext();
 
   //   const mydata = {

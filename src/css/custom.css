@@ -1,0 +1,13 @@
+div#Dialog1403-title {
+     display: none !important;
+     color: #00000000 !important;
+
+}
+
+ .root-646 .ms-Dialog-header .ms-Dialog-title{
+     color: #00000000 !important;
+     background-image: url('../../assets/topHeader.png') !important;
+     top: 0 !important;
+     position: absolute !important;
+ }
+ 
